@@ -4,6 +4,7 @@
 // MVID: 96207368-A754-483F-9F5D-9DD256683876
 // Assembly location: G:\SteamLibrary\steamapps\workshop\content\294100\2590848610\1.4\Assemblies\CombatExtendedAimbot.dll
 
+using System;
 using System.Collections.Generic;
 using Verse;
 
@@ -14,7 +15,8 @@ public class PawnAimBotTracker : IExposable
     public static readonly Dictionary<Pawn, PawnAimBotTracker> Trackers = new();
     public bool AimBotStatus;
 
-    private PawnAimBotTracker() => AimBotStatus = true;
+    [Obsolete("Public to fix try fix load errors :P")]
+    public PawnAimBotTracker() => AimBotStatus = true;
 
     public static PawnAimBotTracker Get(Pawn pawn)
     {
@@ -24,7 +26,9 @@ public class PawnAimBotTracker : IExposable
             return pawnAimBotTracker1;
         }
 
+#pragma warning disable CS0618 // Type or member is obsolete
         PawnAimBotTracker pawnAimBotTracker2 = new();
+#pragma warning restore CS0618 // Type or member is obsolete
         GenCollection.SetOrAdd(Trackers, pawn, pawnAimBotTracker2);
         return pawnAimBotTracker2;
     }

@@ -5,9 +5,11 @@
 // Assembly location: G:\SteamLibrary\steamapps\workshop\content\294100\2590848610\1.4\Assemblies\CombatExtendedAimbot.dll
 
 using CombatExtended;
+using CombatExtended.AI;
 using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
+using System.Linq;
 using Verse;
 
 namespace CombatExtendedAimbot.HarmonyPatches;
@@ -72,8 +74,15 @@ public static class CanHitTargetFromPatch
         {
             return;
         }
+        // don't waste ammo on non-dangerous things or training dummies
+        if (targ.Thing?.HostileTo(shooterPawn) is not true)
+        {
+            Log.Message($"Chilling the f*** out on non-threatening object '{targ.Label}'!");
+            fireMods.CurrentAimMode = AimMode.AimedShot;
+            fireMods.CurrentFireMode = fireMods.AvailableFireModes.OrderByDescending(x => (int)x).First();
+            return;
+        }
         
-        Log.Message(targ.Thing?.Label ?? "no label :(");
         int distance = IntVec3Utility.ManhattanDistanceFlat(root, targ.Cell);
         if (fireMods.AvailableFireModes.Count > 1)
         {

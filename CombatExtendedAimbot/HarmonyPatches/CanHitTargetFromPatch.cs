@@ -68,7 +68,14 @@ public static class CanHitTargetFromPatch
             Debug.Log($"Chilling the f*** out on non-threatening object '{targ.Label}'!");
             compFireModes.CurrentAimMode = AimMode.AimedShot;
             compFireModes.CurrentFireMode = compFireModes.AvailableFireModes.OrderByDescending(x => (int)x).First();
-            PrepareForTarget(shooterPawn, primary, targ);
+            try
+            {
+                PrepareForTarget(shooterPawn, primary, targ);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Error in CombatExtendedAimbot->PrepareForTarget patch: '{e.Message}' at '{e.StackTrace}' caused by '{e.Source}'");
+            }
             return;
         }
         
@@ -78,7 +85,14 @@ public static class CanHitTargetFromPatch
             FireModeDistance fireModeDistance = SwitchFireMode(distance, compFireModes, __instance.VerbPropsCE);
             if (fireModeDistance is FireModeDistance.Large)
             {
-                PrepareForTarget(shooterPawn, primary, targ);
+                try
+                {
+                    PrepareForTarget(shooterPawn, primary, targ);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"Error in CombatExtendedAimbot->PrepareForTarget patch: '{e.Message}' at '{e.StackTrace}' caused by '{e.Source}'");
+                }
             }
         }
 
